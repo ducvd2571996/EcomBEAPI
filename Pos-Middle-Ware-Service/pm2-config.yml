@@ -1,0 +1,7 @@
+apps:
+  - script: ./dist/src/main.js
+    name: 'nest-boilerplate-service'
+    watch: false
+    instances: 4
+    exec_mode: cluster
+    autorestart: true
