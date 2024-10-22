@@ -11,8 +11,6 @@ WORKDIR /usr/src/app
 
 COPY --chown=node:node package*.json ./
 
-COPY --chown=node:node .npmrc ./
-
 RUN npm ci
 
 COPY --chown=node:node . ./
@@ -28,6 +26,6 @@ COPY --chown=node:node --from=builder /usr/src/app ./
 
 COPY pm2-config.yml ./
 
-EXPOSE 3000
+EXPOSE 3003
 
 CMD pm2-runtime start pm2-config.yml

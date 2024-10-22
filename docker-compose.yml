@@ -1,0 +1,15 @@
+version: '3'
+services:
+  user-service:
+    build:
+      context: ./User-Service-API
+      dockerfile: Dockerfile
+    ports:
+      - '3001:3001'
+
+  product-service:
+    build:
+      context: ./Products-Service-API
+      dockerfile: Dockerfile
+    ports:
+      - '3002:3002'
