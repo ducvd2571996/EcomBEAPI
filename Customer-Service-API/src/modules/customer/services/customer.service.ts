@@ -27,7 +27,7 @@ export class CustomerService {
     return await this.customerRepository.GetCustomer(phoneNumber);
   }
 
-  async getCustomerById(id: number): Promise<CustomerInfo> {
+  async getCustomerById(id: string): Promise<CustomerInfo> {
     return await this.customerRepository.GetCustomerById(id);
   }
 }

@@ -21,6 +21,14 @@ export class CreatePosProductPayloadDTO {
   tax: number;
 
   @IsNumber()
+  @IsOptional()
+  brand: number;
+
+  @IsNumber()
+  @IsOptional()
+  discount: number;
+
+  @IsNumber()
   @IsNotEmpty()
   price: number;
 
@@ -35,9 +43,39 @@ export class GetProductListPayloadDTO {
 
   @ApiProperty({ required: false })
   @IsOptional()
+  categoryId: number;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  brand: number;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  minPrice: number;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  maxPrice: number;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
   skipCount: number;
 
   @ApiProperty({ required: false })
   @IsOptional()
   keyword: string;
+}
+
+export class GetProductListByCateIdDTO {
+  @ApiProperty({ required: true })
+  @IsOptional()
+  cateId: number;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  maxResultCount: number;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  skipCount: number;
 }

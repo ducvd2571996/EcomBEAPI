@@ -48,7 +48,7 @@ export class CustomerController {
   })
   @HttpCode(HttpStatus.OK)
   @Get('/getById/:id')
-  async getCustomerById(@Param('id') id: number) {
+  async getCustomerById(@Param('id') id: string) {
     return await this.customerService.getCustomerById(id);
   }
 }

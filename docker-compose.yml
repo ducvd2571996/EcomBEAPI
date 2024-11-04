@@ -6,6 +6,17 @@ services:
       dockerfile: Dockerfile
     ports:
       - '3001:3001'
+    environment:
+      APP_NAME: ${APP_NAME}
+      PORT: 3001
+      NODE_ENV: ${NODE_ENV}
+      APP_VERSION: ${APP_VERSION}
+      LOG: ${LOG}
+      DRIVE_DISK: ${DRIVE_DISK}
+      PG_HOST: ${PG_HOST}
+      PG_USER: ${PG_USER}
+      PG_PASSWORD: ${PG_PASSWORD}
+      PG_DB_NAME: ${PG_DB_NAME}
 
   product-service:
     build:
@@ -13,3 +24,32 @@ services:
       dockerfile: Dockerfile
     ports:
       - '3002:3002'
+    environment:
+      APP_NAME: ${APP_NAME}
+      PORT: 3002
+      NODE_ENV: ${NODE_ENV}
+      APP_VERSION: ${APP_VERSION}
+      LOG: ${LOG}
+      DRIVE_DISK: ${DRIVE_DISK}
+      PG_HOST: ${PG_HOST}
+      PG_USER: ${PG_USER}
+      PG_PASSWORD: ${PG_PASSWORD}
+      PG_DB_NAME: ${PG_DB_NAME}
+
+  cart-service:
+    build:
+      context: ./Cart-Service-API
+      dockerfile: Dockerfile
+    ports:
+      - '3003:3003'
+    environment:
+      APP_NAME: ${APP_NAME}
+      PORT: 3003
+      NODE_ENV: ${NODE_ENV}
+      APP_VERSION: ${APP_VERSION}
+      LOG: ${LOG}
+      DRIVE_DISK: ${DRIVE_DISK}
+      PG_HOST: ${PG_HOST}
+      PG_USER: ${PG_USER}
+      PG_PASSWORD: ${PG_PASSWORD}
+      PG_DB_NAME: ${PG_DB_NAME}

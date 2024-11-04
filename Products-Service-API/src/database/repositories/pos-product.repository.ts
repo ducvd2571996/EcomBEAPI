@@ -16,7 +16,15 @@ export class PosProductRepository {
     private readonly posCategoryEntity: Repository<PosCategoryEntity>,
   ) {}
 
-  async getListOfProduct(skipCount: number, maxResultCount: number, keyword: string) {
+  async getListOfProduct(
+    skipCount: number,
+    maxResultCount: number,
+    keyword: string,
+    minPrice?: number,
+    maxPrice?: number,
+    categoryId?: number,
+    brand?: number,
+  ) {
     const queryBuilder = this.posProductEntity.createQueryBuilder('pos_product');
     if (keyword) {
       // search by keyword and filter status
@@ -24,7 +32,60 @@ export class PosProductRepository {
         keyword: `%${keyword}%`,
       });
     }
+    queryBuilder.leftJoin(PosProductCategoryEntity, 'product_category', 'pos_product.id = product_category.product_id');
+    // Filter by category
+    if (categoryId) {
+      queryBuilder.andWhere('product_category.category_id = :categoryId', { categoryId });
+    }
+
+    // Filter by brand
+    if (brand) {
+      queryBuilder.andWhere('pos_product.brand = :brand', { brand });
+    }
+
+    // Filter by price range
+    if (minPrice != null) {
+      queryBuilder.andWhere('pos_product.price >= :minPrice', { minPrice });
+    }
+    if (maxPrice != null) {
+      queryBuilder.andWhere('pos_product.price <= :maxPrice', { maxPrice });
+    }
+
     const items = await queryBuilder
+      .select([
+        'pos_product.id as productId',
+        'product_category.category_id as categoryId',
+        'pos_product.name as name',
+        'pos_product.description as description',
+        'pos_product.tax as tax',
+        'pos_product.image as image',
+        'pos_product.price as price',
+        'pos_product.discount as discount',
+        'pos_product.brand as brand',
+      ])
+      .skip(+skipCount || 0)
+      .take(+maxResultCount || 10)
+      .orderBy('pos_product.createdAt', 'DESC')
+      .getRawMany();
+
+    for (const product of items) {
+      const category = await this.posCategoryEntity.findOneBy({ id: product.categoryid });
+      product.categoryName = category?.name || 'Unknown'; // Assuming 'name' is the column name for category names
+      product.productId = product.productid;
+      product.categoryId = product.categoryid;
+      delete product.categoryid;
+      delete product.productid;
+    }
+
+    const totalCount = await queryBuilder.getCount();
+
+    return { items, totalCount };
+  }
+
+  async getProductDetail(productId: number) {
+    const queryBuilder = this.posProductEntity.createQueryBuilder('pos_product');
+
+    const product = await queryBuilder
       .leftJoin(PosProductCategoryEntity, 'product_category', 'pos_product.id = product_category.product_id')
       .select([
         'pos_product.id as productId',
@@ -34,12 +95,81 @@ export class PosProductRepository {
         'pos_product.tax as tax',
         'pos_product.image as image',
         'pos_product.price as price',
+        'pos_product.discount as discount',
+        'pos_product.brand as brand',
+        'pos_product.discount_rate as discountRate', // Assuming this column was recently added
+      ])
+      .where('pos_product.id = :productId', { productId })
+      .getRawOne();
+
+    if (product) {
+      const category = await this.posCategoryEntity.findOneBy({ id: product.categoryid });
+      product.categoryName = category?.name || 'Unknown'; // Assuming 'name' is the column name for category names
+      product.productId = product.productid;
+      product.categoryId = product.categoryid;
+      delete product.categoryid;
+      delete product.productid;
+    }
+
+    return product || { message: 'Product not found' };
+  }
+
+  async getLatestProducts() {
+    const queryBuilder = this.posProductEntity.createQueryBuilder('pos_product');
+
+    const items = await queryBuilder
+      .select([
+        'pos_product.id as productId',
+        'pos_product.name as name',
+        'pos_product.description as description',
+        'pos_product.tax as tax',
+        'pos_product.image as image',
+        'pos_product.price as price',
+        'pos_product.discount as discount',
+        'pos_product.brand as brand',
+      ])
+      .skip(0)
+      .take(3)
+      .orderBy('pos_product.createdAt', 'DESC')
+      .getRawMany();
+
+    for (const product of items) {
+      product.productId = product.productid;
+      product.categoryId = product.categoryid;
+      delete product.categoryid;
+      delete product.productid;
+    }
+
+    return { items };
+  }
+
+  // Separate function to filter products by categoryId
+  async getProductsByCategoryId(skipCount: number, maxResultCount: number, categoryId: number) {
+    const queryBuilder = this.posProductEntity.createQueryBuilder('pos_product');
+
+    // Select relevant fields
+    const items = await queryBuilder
+      .leftJoin(PosProductCategoryEntity, 'product_category', 'pos_product.id = product_category.product_id')
+      .andWhere('product_category.category_id = :categoryId', {
+        categoryId,
+      })
+      .select([
+        'pos_product.id as productId',
+        'product_category.category_id as categoryId',
+        'pos_product.name as name',
+        'pos_product.description as description',
+        'pos_product.tax as tax',
+        'pos_product.image as image',
+        'pos_product.price as price',
+        'pos_product.discount as discount',
+        'pos_product.brand as brand',
       ])
       .skip(+skipCount || 0)
       .take(+maxResultCount || 10)
       .orderBy('pos_product.createdAt', 'DESC')
       .getRawMany();
 
+    // Fetch category names and format the product data
     for (const product of items) {
       const category = await this.posCategoryEntity.findOneBy({ id: product.categoryid });
       product.categoryName = category?.name || 'Unknown'; // Assuming 'name' is the column name for category names

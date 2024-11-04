@@ -19,6 +19,12 @@ export class PosProductEntity {
   @Column({ name: 'tax' })
   tax: number;
 
+  @Column({ name: 'discount_rate' })
+  discount: number;
+
+  @Column({ name: 'brand_id' })
+  brand: number;
+
   @Column({ name: 'description' })
   description: string;
 

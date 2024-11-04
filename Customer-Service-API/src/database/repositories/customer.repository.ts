@@ -14,8 +14,8 @@ export class CustomerRepository {
     return await this.customerEntity.findOneBy({ phoneNumber });
   }
 
-  async GetCustomerById(id: number) {
-    return await this.customerEntity.findOneBy({ id });
+  async GetCustomerById(customerId: string) {
+    return await this.customerEntity.findOneBy({ customerId });
   }
 
   async AddCustomer(data: any): Promise<any> {

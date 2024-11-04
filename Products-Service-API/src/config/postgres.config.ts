@@ -1,6 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
-import { PosCategoryEntity, PosProductCategoryEntity, PosProductEntity } from 'src/database/entities';
+import {
+  PosCategoryEntity,
+  PosProductCategoryEntity,
+  PosProductEntity,
+  ProductBrandEntity,
+} from 'src/database/entities';
 
 @Injectable()
 export class PostgresConfigService implements TypeOrmOptionsFactory {
@@ -18,7 +23,7 @@ export class PostgresConfigService implements TypeOrmOptionsFactory {
         trustServerCertificate: true,
       },
       autoLoadEntities: false,
-      entities: [PosCategoryEntity, PosProductEntity, PosProductCategoryEntity],
+      entities: [PosCategoryEntity, PosProductEntity, PosProductCategoryEntity, ProductBrandEntity],
     };
   }
 }

@@ -5,6 +5,8 @@ export class ProductResDto {
   description: string;
   tax: number;
   price: number;
+  discount: number;
+  brand: number;
   createdAt: Date;
   updatedAt: Date;
 }
