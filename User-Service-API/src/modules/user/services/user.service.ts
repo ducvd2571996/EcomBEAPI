@@ -5,6 +5,7 @@ import { UserLoginPayloadDTO } from '../dto/request/login.request.dto';
 import { generateToken } from 'src/shared/utils';
 import { IUser } from 'src/shared/interfaces';
 import { UserInfo, UserLoginResDto } from '../dto/response/user-response.dto';
+import { UpdateUserPayloadDTO } from '../dto/request/update-user.request';
 
 @Injectable()
 export class UserService {
@@ -17,7 +18,7 @@ export class UserService {
         {
           status: HttpStatus.BAD_REQUEST,
           code: '400',
-          message: 'User with this UserName already exists',
+          message: 'User with this phoneNumber already exists',
         },
         HttpStatus.BAD_REQUEST,
       );
@@ -26,7 +27,7 @@ export class UserService {
     return result;
   }
 
-  async updateUser(data: CreateUserPayloadDTO) {
+  async updateUser(data: UpdateUserPayloadDTO) {
     const result = await this.userRepository.updateUserInfo(data);
 
     if (result?.affected === 0) {
@@ -42,6 +43,10 @@ export class UserService {
     } else {
       return result;
     }
+  }
+
+  async getUserById(id: string) {
+    return await this.userRepository.GetUserById(id);
   }
 
   async login(user: UserLoginPayloadDTO): Promise<UserLoginResDto> {
@@ -60,8 +65,10 @@ export class UserService {
 
     const userInfo: UserInfo = {
       id: result.id,
+      userId: result.userId,
       name: result.name,
       phoneNumber: result.phoneNumber,
+      address: result?.address,
       email: result.email,
       updatedAt: result.updatedAt,
       createdAt: result.createdAt,

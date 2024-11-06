@@ -11,8 +11,8 @@ services:
       PORT: 3001
       NODE_ENV: ${NODE_ENV}
       APP_VERSION: ${APP_VERSION}
-      LOG: ${LOG}
-      DRIVE_DISK: ${DRIVE_DISK}
+      LOG: ${LOG:-true}
+      DRIVE_DISK: ${DRIVE_DISK:-local}
       PG_HOST: ${PG_HOST}
       PG_USER: ${PG_USER}
       PG_PASSWORD: ${PG_PASSWORD}
@@ -29,8 +29,8 @@ services:
       PORT: 3002
       NODE_ENV: ${NODE_ENV}
       APP_VERSION: ${APP_VERSION}
-      LOG: ${LOG}
-      DRIVE_DISK: ${DRIVE_DISK}
+      LOG: ${LOG:-true}
+      DRIVE_DISK: ${DRIVE_DISK:-local}
       PG_HOST: ${PG_HOST}
       PG_USER: ${PG_USER}
       PG_PASSWORD: ${PG_PASSWORD}
@@ -47,8 +47,8 @@ services:
       PORT: 3003
       NODE_ENV: ${NODE_ENV}
       APP_VERSION: ${APP_VERSION}
-      LOG: ${LOG}
-      DRIVE_DISK: ${DRIVE_DISK}
+      LOG: ${LOG:-true}
+      DRIVE_DISK: ${DRIVE_DISK:-local}
       PG_HOST: ${PG_HOST}
       PG_USER: ${PG_USER}
       PG_PASSWORD: ${PG_PASSWORD}

@@ -19,6 +19,9 @@ export class CustomerEntity {
   @Column({ name: 'email' })
   email: string;
 
+  @Column({ name: 'address' })
+  address: string;
+
   @Column({
     name: 'created_at',
   })

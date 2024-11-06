@@ -4,7 +4,6 @@ export class PosCustomer1714569606126 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`CREATE TABLE pos_customer (
                 id serial PRIMARY KEY,
-                customer_uuid UUID DEFAULT uuid_generate_v4() UNIQUE,
                 name VARCHAR(255),
                 email VARCHAR(255),
                 phone_number VARCHAR(255),

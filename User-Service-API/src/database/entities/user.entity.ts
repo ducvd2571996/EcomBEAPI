@@ -7,11 +7,17 @@ export class UserEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({ name: 'user_id', type: 'uuid', unique: true })
+  userId: string;
+
   @Column({ name: 'name' })
   name: string;
 
   @Column({ name: 'password' })
   password: string;
+
+  @Column({ name: 'address' })
+  address: string;
 
   @Column({ name: 'phone_number' })
   phoneNumber: string;

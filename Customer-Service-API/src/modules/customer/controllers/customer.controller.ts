@@ -1,8 +1,9 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiProperty, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/common/guards';
 import { CreateCustomerPayloadDTO } from '../dto/request/create-customer-request.dto';
 import { CustomerService } from '../services/customer.service';
+import { UpdateCustomerPayloadDTO } from '../dto/request/update-address.dto';
 
 @ApiBearerAuth()
 @UseGuards(AuthGuard)
@@ -24,6 +25,19 @@ export class CustomerController {
   @Post('')
   async createCustomer(@Body() dataBody: CreateCustomerPayloadDTO) {
     return await this.customerService.create(dataBody);
+  }
+
+  @ApiProperty({
+    description: 'Cập nhật địa chỉ khách hàng',
+  })
+  @ApiOperation({})
+  @ApiResponse({
+    status: HttpStatus.OK,
+  })
+  @HttpCode(HttpStatus.OK)
+  @Put('')
+  async updateAddress(@Body() dataBody: UpdateCustomerPayloadDTO) {
+    return await this.customerService.updateUserAddress(dataBody);
   }
 
   @ApiProperty({

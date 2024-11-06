@@ -1,8 +1,10 @@
 export class UserInfo {
   id: number;
+  userId: string;
   name: string;
   phoneNumber: string;
   email: string;
+  address: string;
   createdAt: Date;
   updatedAt: Date;
 }

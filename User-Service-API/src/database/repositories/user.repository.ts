@@ -11,16 +11,20 @@ export class UserRepository {
   ) {}
 
   async login(data: any) {
-    const user = await this.userEntity.findOneBy({ name: data.userName });
+    const user = await this.userEntity.findOneBy({ phoneNumber: data.phoneNumber });
     return user;
   }
 
+  async GetUserById(userId: string) {
+    return await this.userEntity.findOneBy({ userId });
+  }
+
   async updateUserInfo(data: any): Promise<any> {
-    return await this.userEntity.update({ id: data?.id }, { ...data, updatedAt: new Date() });
+    return await this.userEntity.update({ userId: data?.id }, { ...data, updatedAt: new Date() });
   }
 
   async register(data: any): Promise<any> {
-    const existingItem = await this.userEntity.findOneBy({ name: data?.userName });
+    const existingItem = await this.userEntity.findOneBy({ phoneNumber: data?.phoneNumber });
     if (existingItem) {
       return { success: false };
     }
