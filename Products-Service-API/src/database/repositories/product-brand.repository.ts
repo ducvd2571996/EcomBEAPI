@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { CreateBrandPayloadDTO } from 'src/modules/products/dto/request/brand.request.dto';
+import { CreateBrandPayloadDTO, UpdateBrandPayloadDTO } from 'src/modules/products/dto/request/brand.request.dto';
 import { ProductBrandEntity } from '../entities/product-brand.entity';
 import { PosProductEntity } from '../entities';
 
@@ -37,8 +37,12 @@ export class ProductBrandRepository {
     return formattedBrands;
   }
 
-  async updateBrand(data: any): Promise<any> {
+  async updateBrand(data: UpdateBrandPayloadDTO): Promise<any> {
     return await this.productBrandEntity.update({ id: data?.id }, { ...data, updatedAt: new Date() });
+  }
+
+  async removeBrand(id: number): Promise<any> {
+    return await this.productBrandEntity.delete({ id });
   }
 
   async createBrand(data: CreateBrandPayloadDTO): Promise<any> {

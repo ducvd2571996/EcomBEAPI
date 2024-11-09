@@ -1,4 +1,4 @@
-ARG NODE_IMAGE=node:16-alpine
+ARG NODE_IMAGE=node:16-alpine   
 
 FROM $NODE_IMAGE as base
 
@@ -10,8 +10,6 @@ FROM base as builder
 WORKDIR /usr/src/app
 
 COPY --chown=node:node package*.json ./
-
-COPY --chown=node:node .npmrc ./
 
 RUN npm ci
 
@@ -28,6 +26,6 @@ COPY --chown=node:node --from=builder /usr/src/app ./
 
 COPY pm2-config.yml ./
 
-EXPOSE 3000
+EXPOSE 3004
 
 CMD pm2-runtime start pm2-config.yml

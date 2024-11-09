@@ -14,6 +14,11 @@ export class Product {
   @IsString()
   @ApiProperty()
   @IsNotEmpty()
+  id: number;
+
+  @IsString()
+  @ApiProperty()
+  @IsNotEmpty()
   name: string;
 
   @IsString()
@@ -24,6 +29,10 @@ export class Product {
   @IsNumber()
   @IsOptional()
   tax: number;
+
+  @IsNumber()
+  @IsOptional()
+  discount: number;
 
   @IsNumber()
   @IsNotEmpty()
@@ -44,9 +53,20 @@ export class CreateCartDTO {
   products: Product[];
 
   @IsNumber()
-  @IsNotEmpty()
-  tax: number;
+  @ApiProperty({ required: false })
+  @IsOptional()
+  customerId: number;
 
+  @ApiProperty({ required: false })
+  @IsOptional()
+  coupon?: Coupon;
+
+  @IsOptional()
+  @ApiProperty({ required: false })
+  note?: string;
+}
+
+export class RemoveItemFromCartDto {
   @IsNumber()
   @ApiProperty({ required: false })
   @IsOptional()
@@ -54,31 +74,16 @@ export class CreateCartDTO {
 
   @IsNumber()
   @IsNotEmpty()
-  totalPrice: number;
-
-  @IsNumber()
-  @IsNotEmpty()
-  subTotal: number;
-
-  @IsNumber()
-  @ApiProperty({ required: false })
-  @IsOptional()
-  discountTotal: number;
-
-  @ApiProperty({ required: false })
-  @IsOptional()
-  coupon: Coupon;
-
-  @IsOptional()
-  @ApiProperty({ required: false })
-  note: string;
+  productId: number;
 }
 
-export class UpdateCartDTO {
+export class RemoveCartDto {
   @IsNumber()
-  @IsNotEmpty()
-  id: number;
-
+  @ApiProperty({ required: false })
+  @IsOptional()
+  customerId: number;
+}
+export class UpdateCartDTO {
   @IsNumber()
   @ApiProperty({ required: false })
   @IsOptional()
@@ -87,28 +92,15 @@ export class UpdateCartDTO {
   @IsNotEmpty()
   products: Product[];
 
-  @IsNumber()
-  @IsNotEmpty()
-  tax: number;
-
-  @IsNumber()
-  @IsNotEmpty()
-  totalPrice: number;
-
-  @IsNumber()
-  @IsNotEmpty()
-  subTotal: number;
-
-  @IsNumber()
   @ApiProperty({ required: false })
   @IsOptional()
-  discountTotal: number;
-
-  @ApiProperty({ required: false })
-  @IsOptional()
-  coupon: Coupon;
+  coupon?: Coupon;
 
   @IsOptional()
   @ApiProperty({ required: false })
-  note: string;
+  note?: string;
+
+  @IsOptional()
+  @ApiProperty({ required: false })
+  isAddToCart?: boolean;
 }

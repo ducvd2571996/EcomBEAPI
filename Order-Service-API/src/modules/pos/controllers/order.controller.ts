@@ -38,4 +38,30 @@ export class OrderController {
   async getOrder(@Param('id') id: number) {
     return await this.orderService.get(id);
   }
+
+  @ApiProperty({
+    description: 'Lấy đơn hàng kh',
+  })
+  @ApiOperation({})
+  @ApiResponse({
+    status: HttpStatus.OK,
+  })
+  @HttpCode(HttpStatus.OK)
+  @Get('/get-by-customer/:customerId')
+  async getOrderList(@Param('customerId') customerId: number) {
+    return await this.orderService.getByCustomerId(customerId);
+  }
+
+  @ApiProperty({
+    description: 'Lấy tất cả đơn hàng',
+  })
+  @ApiOperation({})
+  @ApiResponse({
+    status: HttpStatus.OK,
+  })
+  @HttpCode(HttpStatus.OK)
+  @Get('/get-order/all')
+  async getAllOrders() {
+    return await this.orderService.getAllOrders();
+  }
 }

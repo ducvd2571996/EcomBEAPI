@@ -10,4 +10,9 @@ export abstract class OrderWrappersAPI {
     payload: OrderWrappersAPIType.GetOrderPayload,
     configs?: HttpClientRequestConfig,
   ): Promise<HttpClientResponse>;
+
+  abstract getListByCustomerId(
+    payload: OrderWrappersAPIType.GetListOrderPayload,
+    configs?: HttpClientRequestConfig,
+  ): Promise<HttpClientResponse>;
 }

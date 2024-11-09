@@ -1,7 +1,7 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiProperty, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/common/guards';
-import { CreateCartDTO, UpdateCartDTO } from '../dto/request/cart.request.dto';
+import { CreateCartDTO, RemoveItemFromCartDto, UpdateCartDTO } from '../dto/request/cart.request.dto';
 import { CartService } from '../services/cart.service';
 
 @ApiBearerAuth()
@@ -50,5 +50,31 @@ export class CartController {
   @Put('')
   async updateCart(@Body() dataBody: UpdateCartDTO) {
     return await this.cartService.updateCart(dataBody);
+  }
+
+  @ApiProperty({
+    description: 'Xoá sản phẩm khỏi giỏ hàng',
+  })
+  @ApiOperation({})
+  @ApiResponse({
+    status: HttpStatus.OK,
+  })
+  @HttpCode(HttpStatus.OK)
+  @Put('/remove-item')
+  async removeCartItem(@Body() dataBody: RemoveItemFromCartDto) {
+    return await this.cartService.removeItemFromCart(dataBody);
+  }
+
+  @ApiProperty({
+    description: 'Xoá giỏ hàng',
+  })
+  @ApiOperation({})
+  @ApiResponse({
+    status: HttpStatus.OK,
+  })
+  @HttpCode(HttpStatus.OK)
+  @Delete('/:id')
+  async removeFromCart(@Param('id') id: number) {
+    return await this.cartService.removeCart(id);
   }
 }

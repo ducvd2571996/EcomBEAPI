@@ -47,4 +47,15 @@ export class OrderWrappersService extends OrderWrappersAPI {
       configs,
     });
   }
+
+  getListByCustomerId(
+    payload: OrderWrappersAPIType.GetListOrderPayload,
+    configs?: HttpClientRequestConfig,
+  ): Promise<HttpClientResponse<Array<OrderWrappersAPIType.GetOrderResponse>>> {
+    return this.orderWrappersMakeRequest<Array<OrderWrappersAPIType.GetOrderResponse>>({
+      method: HttpMethod.Get,
+      url: `${OrderWrappersEndpoint.ApiGetOrderByCustomer}/${payload.customerId}`,
+      configs,
+    });
+  }
 }

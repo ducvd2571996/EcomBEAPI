@@ -15,6 +15,19 @@ export class PosOrderRepository {
     return await this.posOrderEntity.findOneBy({ id });
   }
 
+  async getListOrderByUserId(customerId: number): Promise<PosOrderEntity[]> {
+    const queryBuilder = this.posOrderEntity.createQueryBuilder('pos_order');
+    return await queryBuilder
+      .where('pos_order.customer_id = :customerId', { customerId })
+      .orderBy('pos_order.createdAt', 'DESC')
+      .getMany();
+  }
+
+  async getListOrder(): Promise<PosOrderEntity[]> {
+    const queryBuilder = this.posOrderEntity.createQueryBuilder('pos_order');
+    return await queryBuilder.orderBy('pos_order.createdAt', 'DESC').getMany();
+  }
+
   async createOrder(data: CreateOrderPayloadDTO): Promise<any> {
     const order = this.posOrderEntity.create({
       ...data,

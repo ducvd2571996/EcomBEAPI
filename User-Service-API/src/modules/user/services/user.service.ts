@@ -45,8 +45,38 @@ export class UserService {
     }
   }
 
-  async getUserById(id: string) {
-    return await this.userRepository.GetUserById(id);
+  async getUserById(id: number) {
+    const result = await this.userRepository.GetUserById(id);
+    const userInfo: UserInfo = {
+      id: result.id,
+      userId: result.userId,
+      name: result.name,
+      phoneNumber: result.phoneNumber,
+      address: result?.address,
+      email: result.email,
+      updatedAt: result.updatedAt,
+      createdAt: result.createdAt,
+    };
+    return userInfo;
+  }
+
+  async getListUser() {
+    const result = await this.userRepository.getListUser();
+    const users = result?.map((user) => {
+      const userInfo: UserInfo = {
+        id: user?.id,
+        userId: user?.userId,
+        name: user?.name,
+        phoneNumber: user?.phoneNumber,
+        address: user?.address,
+        email: user?.email,
+        updatedAt: user?.updatedAt,
+        createdAt: user?.createdAt,
+      };
+      return userInfo;
+    });
+
+    return users;
   }
 
   async login(user: UserLoginPayloadDTO): Promise<UserLoginResDto> {

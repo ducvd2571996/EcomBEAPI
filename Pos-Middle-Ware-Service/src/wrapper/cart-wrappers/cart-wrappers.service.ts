@@ -35,4 +35,15 @@ export class CartWrappersService extends CartWrappersAPI {
       configs,
     });
   }
+
+  removeCart(
+    payload: CartWrappersAPIType.GetCartPayload,
+    configs?: HttpClientRequestConfig,
+  ): Promise<HttpClientResponse> {
+    return this.cartWrappersMakeRequest<CartWrappersAPIType.GetCartPayload>({
+      method: HttpMethod.Delete,
+      url: `${CartWrappersEndpoint.ApiCart}/${payload.id}`,
+      configs,
+    });
+  }
 }

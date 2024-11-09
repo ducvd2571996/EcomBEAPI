@@ -15,8 +15,16 @@ export class UserRepository {
     return user;
   }
 
-  async GetUserById(userId: string) {
-    return await this.userEntity.findOneBy({ userId });
+  async GetUserById(id: number) {
+    return await this.userEntity.findOneBy({ id });
+  }
+
+  async getListUser(): Promise<UserEntity[]> {
+    const queryBuilder = this.userEntity.createQueryBuilder('pos_user');
+    return await queryBuilder
+      .orderBy('pos_user.updatedAt', 'DESC')
+      .where('pos_user.user_role = :role', { role: 'user' })
+      .getMany();
   }
 
   async updateUserInfo(data: any): Promise<any> {

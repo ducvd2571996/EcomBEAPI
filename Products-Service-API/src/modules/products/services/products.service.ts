@@ -1,13 +1,14 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PosCategoryRepository, PosProductRepository } from 'src/database/repositories';
-import { CreateCategoryPayloadDTO } from '../dto/request/category.request.dto';
+import { CreateCategoryPayloadDTO, UpdateCategoryPayloadDTO } from '../dto/request/category.request.dto';
 import {
   CreatePosProductPayloadDTO,
   GetProductListByCateIdDTO,
   GetProductListPayloadDTO,
+  UpdatePosProductPayloadDTO,
 } from '../dto/request/product.request.dto';
 import { ProductListResDto, ProductResDto } from '../dto/response/product.reponse.dto';
-import { CreateBrandPayloadDTO } from '../dto/request/brand.request.dto';
+import { CreateBrandPayloadDTO, UpdateBrandPayloadDTO } from '../dto/request/brand.request.dto';
 import { ProductBrandRepository } from 'src/database/repositories/product-brand.repository';
 
 @Injectable()
@@ -34,6 +35,14 @@ export class ProductsService {
     return result;
   }
 
+  async updateCategory(dataBody: UpdateCategoryPayloadDTO) {
+    return await this.posCategoryRepository.updateCategory(dataBody);
+  }
+
+  async removeCategory(id: number) {
+    return await this.posCategoryRepository.removeCategory(id);
+  }
+
   async createBrand(dataBody: CreateBrandPayloadDTO) {
     const result = await this.productBrandRepository.createBrand(dataBody);
     if (!result?.success) {
@@ -50,8 +59,24 @@ export class ProductsService {
     return result;
   }
 
+  async updateBrand(dataBody: UpdateBrandPayloadDTO) {
+    return await this.productBrandRepository.updateBrand(dataBody);
+  }
+
+  async deleteBrand(id: number) {
+    return await this.productBrandRepository.removeBrand(id);
+  }
+
   async createProduct(dataBody: CreatePosProductPayloadDTO) {
     return await this.posProductRepository.createProduct(dataBody);
+  }
+
+  async updateProduct(dataBody: UpdatePosProductPayloadDTO) {
+    return await this.posProductRepository.updateProduct(dataBody);
+  }
+
+  async deleteProduct(id: number) {
+    return await this.posProductRepository.removeProduct(id);
   }
 
   async getCategoryList() {

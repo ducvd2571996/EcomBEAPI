@@ -2,7 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { PosCategoryEntity, PosProductCategoryEntity, PosProductEntity } from '../entities';
-import { CreateCategoryPayloadDTO } from 'src/modules/products/dto/request/category.request.dto';
+import {
+  CreateCategoryPayloadDTO,
+  UpdateCategoryPayloadDTO,
+} from 'src/modules/products/dto/request/category.request.dto';
 
 @Injectable()
 export class PosCategoryRepository {
@@ -39,8 +42,12 @@ export class PosCategoryRepository {
     );
   }
 
-  async updateCategory(data: any): Promise<any> {
+  async updateCategory(data: UpdateCategoryPayloadDTO): Promise<any> {
     return await this.posCategoryEntity.update({ id: data?.id }, { ...data, updatedAt: new Date() });
+  }
+
+  async removeCategory(id: number): Promise<any> {
+    return await this.posCategoryEntity.delete({ id });
   }
 
   async createCategory(data: CreateCategoryPayloadDTO): Promise<any> {

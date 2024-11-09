@@ -9,6 +9,7 @@ import Helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import { setupSwagger } from './swagger';
 import { SWAGGER_API_ENDPOINT } from './swagger/swagger.constant';
+import cors from 'cors';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -29,6 +30,13 @@ async function bootstrap() {
   app.use(compression());
   app.use(bodyParser.json({ limit: '1000kb' }));
   app.use(bodyParser.urlencoded({ limit: '1000kb', extended: true }));
+  app.use(
+    cors({
+      origin: 'http://localhost:3000', // Allow only your frontend origin
+      methods: ['GET', 'POST'], // Specify allowed methods
+      allowedHeaders: ['Content-Type', 'Authorization'], // Specify allowed headers
+    }),
+  );
 
   await app.listen(configService.get<number>('PORT'));
   // eslint-disable-next-line no-console

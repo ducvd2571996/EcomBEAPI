@@ -36,6 +36,46 @@ export class CreatePosProductPayloadDTO {
   categoryIds: number[];
 }
 
+export class UpdatePosProductPayloadDTO {
+  @IsNumber()
+  @ApiProperty()
+  @IsNotEmpty()
+  id: number;
+
+  @IsString()
+  @ApiProperty()
+  @IsNotEmpty()
+  name: string;
+
+  @IsString()
+  @ApiProperty()
+  image: string;
+
+  @IsString()
+  @ApiProperty({ required: false })
+  @IsOptional()
+  description: string;
+
+  @IsNumber()
+  @IsOptional()
+  tax: number;
+
+  @IsNumber()
+  @IsOptional()
+  brand: number;
+
+  @IsNumber()
+  @IsOptional()
+  discount: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  price: number;
+
+  @IsNotEmpty()
+  categoryIds: number[];
+}
+
 export class GetProductListPayloadDTO {
   @ApiProperty({ required: false })
   @IsOptional()

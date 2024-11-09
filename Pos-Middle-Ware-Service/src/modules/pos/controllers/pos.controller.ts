@@ -41,4 +41,18 @@ export class POSController {
   async getOrder(@Param('id') id: number) {
     return await this.posService.get(id);
   }
+
+  @ApiProperty({
+    description: 'Lấy danh sách đơn hàng',
+  })
+  @ApiOperation({})
+  @Public()
+  @ApiResponse({
+    status: HttpStatus.OK,
+  })
+  @HttpCode(HttpStatus.OK)
+  @Get('/orders/get-by-customer/:customerId')
+  async getList(@Param('customerId') customerId: number) {
+    return await this.posService.getListByCustomerId(customerId);
+  }
 }

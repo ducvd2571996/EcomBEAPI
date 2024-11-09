@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { PosCategoryEntity, PosProductCategoryEntity, PosProductEntity } from '../entities';
+import { UpdatePosProductPayloadDTO } from 'src/modules/products/dto/request/product.request.dto';
 
 @Injectable()
 export class PosProductRepository {
@@ -184,8 +185,12 @@ export class PosProductRepository {
     return { items, totalCount };
   }
 
-  async updateProduct(data: any): Promise<any> {
+  async updateProduct(data: UpdatePosProductPayloadDTO): Promise<any> {
     return await this.posProductEntity.update({ id: data?.id }, { ...data, updatedAt: new Date() });
+  }
+
+  async removeProduct(productId: number): Promise<any> {
+    return await this.posProductEntity.delete({ id: productId });
   }
 
   async createProduct(data: any): Promise<any> {

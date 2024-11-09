@@ -13,4 +13,13 @@ export class OrderService {
   async get(id: number) {
     return await this.posOrderRepository.getOrder(id);
   }
+
+  async getAllOrders() {
+    const data = await this.posOrderRepository.getListOrder();
+    return data;
+  }
+
+  async getByCustomerId(customerId: number) {
+    return await this.posOrderRepository.getListOrderByUserId(customerId);
+  }
 }

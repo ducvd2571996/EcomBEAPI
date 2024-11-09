@@ -68,7 +68,20 @@ export class UserController {
   })
   @HttpCode(HttpStatus.OK)
   @Get('/:id')
-  async getUserById(@Param('id') id: string) {
+  async getUserById(@Param('id') id: number) {
     return await this.userService.getUserById(id);
+  }
+
+  @ApiProperty({
+    description: 'Lấy ds khách hàng',
+  })
+  @ApiOperation({})
+  @ApiResponse({
+    status: HttpStatus.OK,
+  })
+  @HttpCode(HttpStatus.OK)
+  @Get('/get-users/all')
+  async getListUser() {
+    return await this.userService.getListUser();
   }
 }

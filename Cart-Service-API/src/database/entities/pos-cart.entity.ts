@@ -8,6 +8,7 @@ class Product {
   note: string;
   quantity: number;
   price: number;
+  discount: number;
   tax: number;
 }
 

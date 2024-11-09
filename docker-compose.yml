@@ -6,6 +6,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - '3001:3001'
+    networks:
+      - app-network
     environment:
       APP_NAME: ${APP_NAME}
       PORT: 3001
@@ -42,6 +44,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - '3003:3003'
+    networks:
+      - app-network
     environment:
       APP_NAME: ${APP_NAME}
       PORT: 3003
@@ -53,3 +57,49 @@ services:
       PG_USER: ${PG_USER}
       PG_PASSWORD: ${PG_PASSWORD}
       PG_DB_NAME: ${PG_DB_NAME}
+
+  order-service:
+    build:
+      context: ./Order-Service-API
+      dockerfile: Dockerfile
+    ports:
+      - '3004:3004'
+    networks:
+      - app-network
+    environment:
+      APP_NAME: ${APP_NAME}
+      PORT: 3004
+      NODE_ENV: ${NODE_ENV}
+      APP_VERSION: ${APP_VERSION}
+      LOG: ${LOG:-true}
+      DRIVE_DISK: ${DRIVE_DISK:-local}
+      PG_HOST: ${PG_HOST}
+      PG_USER: ${PG_USER}
+      PG_PASSWORD: ${PG_PASSWORD}
+      PG_DB_NAME: ${PG_DB_NAME}
+
+  pos-middle-ware-service:
+    build:
+      context: ./Pos-Middle-Ware-Service
+      dockerfile: Dockerfile
+    ports:
+      - '3005:3005'
+    networks:
+      - app-network
+    environment:
+      APP_NAME: ${APP_NAME}
+      PORT: 3005
+      NODE_ENV: ${NODE_ENV}
+      APP_VERSION: ${APP_VERSION}
+      LOG: ${LOG:-true}
+      DRIVE_DISK: ${DRIVE_DISK:-local}
+      PG_HOST: ${PG_HOST}
+      PG_USER: ${PG_USER}
+      PG_PASSWORD: ${PG_PASSWORD}
+      PG_DB_NAME: ${PG_DB_NAME}
+      ORDER_SERVICE_URL: http://order-service:3004
+      CART_SERVICE_URL: http://cart-service:3003 # adjust port as needed
+
+networks:
+  app-network:
+    driver: bridge

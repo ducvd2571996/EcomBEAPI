@@ -5,4 +5,9 @@ export abstract class CartWrappersAPI {
     payload: CartWrappersAPIType.GetCartPayload,
     configs?: HttpClientRequestConfig,
   ): Promise<HttpClientResponse>;
+
+  abstract removeCart(
+    payload: CartWrappersAPIType.GetCartPayload,
+    configs?: HttpClientRequestConfig,
+  ): Promise<HttpClientResponse>;
 }

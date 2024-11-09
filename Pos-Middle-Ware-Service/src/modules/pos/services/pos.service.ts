@@ -1,17 +1,15 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
-import { OrderWrappersService } from 'src/wrapper/order-wrappers';
-import { CreateOrderPayloadDTO } from '../dto/oder.request.dto';
-import { CustomerWrappersService } from 'src/wrapper/customer-wrappers';
-import { CartWrappersService } from 'src/wrapper/cart-wrappers';
-import { Request } from 'express';
 import { REQUEST } from '@nestjs/core';
+import { Request } from 'express';
+import { CartWrappersService } from 'src/wrapper/cart-wrappers';
+import { OrderWrappersService } from 'src/wrapper/order-wrappers';
+import { CreateOrderPayloadDTO, GetOrderResponse } from '../dto/oder.request.dto';
 
 @Injectable()
 export class POSService {
   token: string;
   constructor(
     private readonly orderService: OrderWrappersService,
-    private readonly customerService: CustomerWrappersService,
     private readonly cartService: CartWrappersService,
     @Inject(REQUEST)
     private readonly request: Request,
@@ -24,37 +22,38 @@ export class POSService {
 
   async create(dataBody: CreateOrderPayloadDTO) {
     const existedCart = await this.cartService.getCart(
-      { id: dataBody.cartId },
+      { id: dataBody?.customerId },
       {
         headers: {
           Authorization: this.token,
         },
       },
     );
-    if (dataBody?.customerId) {
-      const existedCustomer = (await this.customerService.getCustomer(
-        { id: dataBody.customerId },
-        {
-          headers: {
-            Authorization: this.token,
-          },
-        },
-      )) as any;
-      if (!existedCustomer?.data?.status || existedCustomer?.data?.status !== 200) {
-        return existedCustomer.data;
-      }
-
-      if (!existedCustomer?.data?.data) throw new HttpException('Customer not found', HttpStatus.BAD_REQUEST);
-    }
-
-    if (!existedCart?.data?.data) throw new HttpException('Cart not found', HttpStatus.BAD_REQUEST);
+    const existedCartData = existedCart?.data?.data;
+    if (!existedCartData) throw new HttpException('Cart not found', HttpStatus.BAD_REQUEST);
     if (!existedCart?.data?.status || existedCart?.data?.status !== 200) return existedCart.data;
+    if (existedCartData) {
+      dataBody.subTotal = existedCartData?.subTotal;
+      dataBody.discountTotal = existedCartData?.discountTotal;
+      dataBody.totalPrice = existedCartData?.totalPrice;
+      dataBody.products = existedCartData?.products;
+    }
 
     const data = await this.orderService.createOrder(dataBody, {
       headers: {
         Authorization: this.token,
       },
     });
+
+    await this.cartService.removeCart(
+      { id: dataBody?.customerId },
+      {
+        headers: {
+          Authorization: this.token,
+        },
+      },
+    );
+
     return { ...data.data };
   }
 
@@ -68,7 +67,7 @@ export class POSService {
       },
     )) as any;
     const cart = await this.cartService.getCart(
-      { id: order.data.data.cartId },
+      { id: order.data?.data?.cartId },
       {
         headers: {
           Authorization: this.token,
@@ -78,19 +77,6 @@ export class POSService {
 
     const data = order.data.data as any;
     const cartData = cart.data.data;
-    if (data?.customerId) {
-      const customer = (await this.customerService.getCustomer(
-        { id: data?.customerId },
-        {
-          headers: {
-            Authorization: this.token,
-          },
-        },
-      )) as any;
-
-      data.customerName = customer?.data?.data?.name;
-      data.customerPhone = customer?.data?.data?.phoneNumber;
-    }
 
     return {
       ...data,
@@ -99,8 +85,18 @@ export class POSService {
       totalPrice: cartData?.totalPrice,
       subTotal: cartData?.subTotal,
       discountTotal: cartData?.discountTotal,
-      coupon: cartData?.coupon,
-      tax: cartData?.tax,
     };
+  }
+
+  async getListByCustomerId(customerId: number): Promise<GetOrderResponse[]> {
+    const data = (await this.orderService.getListByCustomerId(
+      { customerId },
+      {
+        headers: {
+          Authorization: this.token,
+        },
+      },
+    )) as any;
+    return data?.data?.data;
   }
 }
