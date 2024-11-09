@@ -33,7 +33,7 @@ export class CreatePosProductPayloadDTO {
   price: number;
 
   @IsNotEmpty()
-  categoryIds: number[];
+  categoryId: number;
 }
 
 export class UpdatePosProductPayloadDTO {
@@ -73,7 +73,7 @@ export class UpdatePosProductPayloadDTO {
   price: number;
 
   @IsNotEmpty()
-  categoryIds: number[];
+  categoryId: number;
 }
 
 export class GetProductListPayloadDTO {

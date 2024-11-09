@@ -72,7 +72,7 @@ export class ProductController {
     status: HttpStatus.OK,
   })
   @HttpCode(HttpStatus.OK)
-  @Delete('')
+  @Delete('delete-by-id/:id')
   async deleteProduct(@Param('id') id: number) {
     return await this.productService.deleteProduct(id);
   }
@@ -169,7 +169,7 @@ export class ProductController {
     status: HttpStatus.OK,
   })
   @HttpCode(HttpStatus.OK)
-  @Delete('/categories/delete')
+  @Delete('/categories/delete/:id')
   async deleteCate(@Param('id') id: number) {
     return await this.productService.removeCategory(id);
   }
@@ -211,7 +211,7 @@ export class ProductController {
     status: HttpStatus.OK,
   })
   @HttpCode(HttpStatus.OK)
-  @Delete('/brands/delete')
+  @Delete('/brands/delete/:id')
   async deleteBrand(@Param('id') id: number) {
     return await this.productService.deleteBrand(id);
   }

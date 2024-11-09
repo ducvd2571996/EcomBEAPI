@@ -5,7 +5,7 @@ export class UpdateUserPayloadDTO {
   @IsString()
   @ApiProperty()
   @IsNotEmpty()
-  id: string;
+  id: number;
 
   @ApiProperty()
   @IsOptional()
@@ -14,6 +14,10 @@ export class UpdateUserPayloadDTO {
   @ApiProperty()
   @IsOptional()
   phoneNumber: string;
+
+  @ApiProperty()
+  @IsOptional()
+  url: string;
 
   @ApiProperty()
   @IsOptional()

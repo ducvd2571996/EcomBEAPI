@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { PosCategoryEntity, PosProductCategoryEntity, PosProductEntity } from '../entities';
 import { UpdatePosProductPayloadDTO } from 'src/modules/products/dto/request/product.request.dto';
 
@@ -186,10 +186,44 @@ export class PosProductRepository {
   }
 
   async updateProduct(data: UpdatePosProductPayloadDTO): Promise<any> {
-    return await this.posProductEntity.update({ id: data?.id }, { ...data, updatedAt: new Date() });
+    const existingProduct = await this.posProductEntity.findOne({ where: { id: data?.id } });
+
+    if (!existingProduct) {
+      return { success: false, message: 'Product not found' };
+    }
+
+    Object.assign(existingProduct, {
+      ...data,
+      updatedAt: new Date(),
+    });
+
+    const updatedProduct = await this.posProductEntity.save(existingProduct);
+
+    if (!updatedProduct) return { success: false, message: 'Failed to update product' };
+
+    // Update product-category relationship if categoryId has changed
+    if (data.categoryId) {
+      const existingCategory = await this.posCategoryEntity.findOne({ where: { id: data.categoryId } });
+
+      if (!existingCategory) {
+        return { success: false, message: 'Category not found' };
+      }
+
+      await this.posProductCategoryEntity.upsert(
+        {
+          product_id: data?.id,
+          category_id: data.categoryId,
+        },
+        ['product_id', 'category_id'],
+      );
+    }
+
+    return { success: true, message: 'Product updated successfully' };
   }
 
   async removeProduct(productId: number): Promise<any> {
+    // Remove related entries in the product_category table
+    await this.posProductCategoryEntity.delete({ product_id: productId });
     return await this.posProductEntity.delete({ id: productId });
   }
 
@@ -200,11 +234,9 @@ export class PosProductRepository {
       updatedAt: new Date(),
     } as any);
 
-    // Check if any category with the given IDs exists
-    const existingItems = await this.posCategoryEntity.find({ where: { id: In(data.categoryIds) } });
+    const existingItem = await this.posCategoryEntity.find({ where: { id: data?.categoryId } });
 
-    // If not all categories are found, return { success: false }
-    if (existingItems.length !== data?.categoryIds.length) {
+    if (!existingItem) {
       return { success: false };
     }
 
@@ -212,16 +244,11 @@ export class PosProductRepository {
 
     if (!insertedProduct) return { success: false };
 
-    // Insert product_id and category_id into product_category for each categoryId
-    await Promise.all(
-      data?.categoryIds.map(async (categoryId: number) => {
-        const productCategory = this.posProductCategoryEntity.create({
-          product_id: insertedProduct?.id,
-          category_id: categoryId,
-        });
-        await this.posProductCategoryEntity.insert(productCategory);
-      }),
-    );
+    const productCategory = this.posProductCategoryEntity.create({
+      product_id: insertedProduct?.id,
+      category_id: data?.categoryId,
+    });
+    await this.posProductCategoryEntity.insert(productCategory);
 
     return { success: true };
   }

@@ -99,6 +99,7 @@ export class UserService {
       name: result.name,
       phoneNumber: result.phoneNumber,
       address: result?.address,
+      role: result?.role,
       email: result.email,
       updatedAt: result.updatedAt,
       createdAt: result.createdAt,

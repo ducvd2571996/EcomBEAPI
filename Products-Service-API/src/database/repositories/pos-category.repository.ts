@@ -47,6 +47,7 @@ export class PosCategoryRepository {
   }
 
   async removeCategory(id: number): Promise<any> {
+    await this.posProductCategoryEntity.delete({ category_id: id });
     return await this.posCategoryEntity.delete({ id });
   }
 

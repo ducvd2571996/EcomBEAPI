@@ -4,6 +4,7 @@ export class UserInfo {
   name: string;
   phoneNumber: string;
   email: string;
+  role?: string;
   address: string;
   createdAt: Date;
   updatedAt: Date;
