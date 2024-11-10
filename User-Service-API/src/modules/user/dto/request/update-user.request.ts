@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
 
 export class UpdateUserPayloadDTO {
-  @IsString()
+  @IsNumber()
   @ApiProperty()
   @IsNotEmpty()
   id: number;

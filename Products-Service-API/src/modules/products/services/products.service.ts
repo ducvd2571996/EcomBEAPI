@@ -87,6 +87,10 @@ export class ProductsService {
     return await this.productBrandRepository.getListOfBrand();
   }
 
+  async getTopProduct() {
+    return await this.posProductRepository.getTop5ProductsBySaleCount();
+  }
+
   async getProductList(payload: GetProductListPayloadDTO): Promise<ProductListResDto> {
     const { skipCount, maxResultCount, keyword, minPrice, maxPrice, categoryId, brand } = payload;
     return await this.posProductRepository.getListOfProduct(

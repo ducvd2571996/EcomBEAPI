@@ -28,7 +28,7 @@ export class UserRepository {
   }
 
   async updateUserInfo(data: any): Promise<any> {
-    return await this.userEntity.update({ userId: data?.id }, { ...data, updatedAt: new Date() });
+    return await this.userEntity.update({ id: data?.id }, { ...data, updatedAt: new Date() });
   }
 
   async register(data: any): Promise<any> {

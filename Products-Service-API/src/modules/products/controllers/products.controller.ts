@@ -243,4 +243,18 @@ export class ProductController {
   async getBrands() {
     return await this.productService.getBrandList();
   }
+
+  @Public()
+  @ApiProperty({
+    description: 'Danh sách 5 sp bán chạy',
+  })
+  @ApiOperation({})
+  @ApiResponse({
+    status: HttpStatus.OK,
+  })
+  @HttpCode(HttpStatus.OK)
+  @Get('/top-product/get-top')
+  async getBestProduct() {
+    return await this.productService.getTopProduct();
+  }
 }

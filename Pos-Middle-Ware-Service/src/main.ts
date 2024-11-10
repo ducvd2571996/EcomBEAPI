@@ -32,7 +32,7 @@ async function bootstrap() {
   app.use(bodyParser.urlencoded({ limit: '1000kb', extended: true }));
   app.use(
     cors({
-      origin: 'http://localhost:3000', // Allow only your frontend origin
+      origin: 'http://localhost:3006', // Allow only your frontend origin
       methods: ['GET', 'POST'], // Specify allowed methods
       allowedHeaders: ['Content-Type', 'Authorization'], // Specify allowed headers
     }),

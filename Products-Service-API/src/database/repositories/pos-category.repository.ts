@@ -21,15 +21,17 @@ export class PosCategoryRepository {
   ) {}
 
   async getListOfCategory(): Promise<PosCategoryEntity[]> {
-    const categoryCounts = await this.posProductEntity
-      .createQueryBuilder('pos_product')
-      .leftJoin(PosProductCategoryEntity, 'product_category', 'pos_product.id = product_category.product_id')
-      .leftJoin(PosCategoryEntity, 'category', 'category.id = product_category.category_id')
+    const categoryCounts = await this.posCategoryEntity
+      .createQueryBuilder('category')
+      .leftJoin(PosProductCategoryEntity, 'product_category', 'category.id = product_category.category_id')
+      .leftJoin(PosProductEntity, 'pos_product', 'pos_product.id = product_category.product_id')
       .select('category.id', 'categoryId')
       .addSelect('category.name', 'categoryName')
+      .addSelect('category.image', 'categoryImage') // Make sure 'image' is the correct column name in the database
       .addSelect('COUNT(pos_product.id)', 'productCount')
       .groupBy('category.id')
       .addGroupBy('category.name')
+      .orderBy('category.created_at', 'DESC')
       .getRawMany();
 
     return categoryCounts.map(
@@ -37,7 +39,8 @@ export class PosCategoryRepository {
         ({
           id: category.categoryId,
           name: category.categoryName,
-          productCount: parseInt(category.productCount, 10),
+          image: category.categoryImage || null, // Make sure to map it correctly
+          productCount: parseInt(category.productCount, 10) || 0, // Ensure 0 for categories with no products
         } as any),
     );
   }

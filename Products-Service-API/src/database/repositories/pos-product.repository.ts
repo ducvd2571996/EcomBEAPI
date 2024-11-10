@@ -63,6 +63,7 @@ export class PosProductRepository {
         'pos_product.price as price',
         'pos_product.discount as discount',
         'pos_product.brand as brand',
+        'pos_product.sale_count as saleCount',
       ])
       .skip(+skipCount || 0)
       .take(+maxResultCount || 10)
@@ -71,7 +72,7 @@ export class PosProductRepository {
 
     for (const product of items) {
       const category = await this.posCategoryEntity.findOneBy({ id: product.categoryid });
-      product.categoryName = category?.name || 'Unknown'; // Assuming 'name' is the column name for category names
+      product.categoryName = category?.name || 'Unknown';
       product.productId = product.productid;
       product.categoryId = product.categoryid;
       delete product.categoryid;
@@ -81,6 +82,35 @@ export class PosProductRepository {
     const totalCount = await queryBuilder.getCount();
 
     return { items, totalCount };
+  }
+
+  async getTop5ProductsBySaleCount() {
+    const queryBuilder = this.posProductEntity.createQueryBuilder('pos_product');
+
+    const topProducts = await queryBuilder
+      .select([
+        'pos_product.id as productId',
+        'pos_product.name as name',
+        'pos_product.description as description',
+        'pos_product.tax as tax',
+        'pos_product.image as image',
+        'pos_product.price as price',
+        'pos_product.discount as discount',
+        'pos_product.brand as brand',
+        'pos_product.sale_count as saleCount',
+      ])
+      .orderBy('pos_product.sale_count', 'DESC')
+      .take(5)
+      .getRawMany();
+
+    for (const product of topProducts) {
+      const category = await this.posCategoryEntity.findOneBy({ id: product.categoryid });
+      product.categoryName = category?.name || 'Unknown';
+      product.productId = product.productid;
+      delete product.productid;
+    }
+
+    return topProducts;
   }
 
   async getProductDetail(productId: number) {
